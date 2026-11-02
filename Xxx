@@ -1,0 +1,91 @@
+SELECT
+
+    SUM(total_sales) AS total_sales
+
+FROM sales_analysis;
+
+SELECT
+
+    SUM(profit) AS total_profit
+
+FROM sales_analysis;
+
+SELECT
+
+    ROUND(
+
+        SUM(profit) / NULLIF(SUM(total_sales), 0) * 100,
+
+        2
+
+    ) AS profit_margin
+
+FROM sales_analysis;
+
+SELECT
+
+    o.product_name AS product,
+
+    SUM(a.total_sales) AS total_sales
+
+FROM sales_analysis a
+
+JOIN orders o ON a.order_id = o.id
+
+GROUP BY o.product_name
+
+ORDER BY total_sales DESC;
+
+SELECT
+
+    o.order_date AS time,
+
+    a.total_sales AS value
+
+FROM sales_analysis a
+
+JOIN orders o ON a.order_id = o.id
+
+WHERE $__timeFilter(o.order_date)
+
+ORDER BY o.order_date;
+
+SELECT
+
+    date_trunc('day', o.order_date) AS time,
+
+    SUM(a.total_sales) AS value
+
+FROM sales_analysis a
+
+JOIN orders o ON a.order_id = o.id
+
+WHERE $__timeFilter(o.order_date)
+
+GROUP BY 1
+
+ORDER BY 1;
+
+SELECT
+
+    SUM(total_sales) AS total_sales
+
+FROM sales_analysis;
+
+Aşama 11 — İlk Grafana Dashboard’umuzu oluşturalım
+
+Dashboard’umuzda toplam satış, toplam kâr, kâr marjı, ürün bazında satışlar ve günlük satış grafikleri bulunacak.
+
+1. Yeni Dashboard oluştur
+
+Grafana ekranında:
+
+1. Dashboards → New → New dashboard bölümüne git.
+
+2. Add visualization butonuna tıkla.
+
+3. Daha önce oluşturduğumuz PostgreSQL veri kaynağını seç.
+
+4. Query bölümünde Code moduna geç.
+
+İlk olarak toplam satış tutarını göstereceğiz.
